@@ -6,6 +6,20 @@ import (
 	. "github.com/Matt-Spence/CarGo/cargo"
 )
 
+func TestUnwrap(t *testing.T) {
+	var sr Result[float64] = Result[float64]{Value: 6.0, Err: nil}
+	if sr.Unwrap() != 6.0 {
+		t.Fail()
+	}
+}
+
+func TestUnwrapOr(t *testing.T) {
+	var sr Result[float64] = Result[float64]{Value: 6.0, Err: errors.New("error")}
+	if sr.UnwrapOr(1.0) != 1.0 {
+		t.Fail()
+	}
+}
+
 func TestIsOkAnd(t *testing.T) {
 	var sr Result[float64] = Result[float64]{Value: 6.0, Err: nil}
 	if !sr.IsOkAnd(func(f float64) bool { return f > 5.0 }) {

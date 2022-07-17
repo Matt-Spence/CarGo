@@ -22,7 +22,19 @@ func TestMatchMultiCase(t *testing.T) {
 		Case("test", func() int {return 2}).
 	Done()
 
-	if passed.IsOkAnd(func(i int) bool {return i == 2}) {
+	if !passed.IsOkAnd(func(i int) bool {return i == 2}) {
+		t.Fail()
+	} 
+}
+
+func TestMatchUnmatched(t *testing.T) {
+	var str string = "test"
+	var passed Result[int] = Match[string, int]{Value: str}.
+		Case("notThisOne", func() int {return 1}).
+		Case("notThisOneEither", func() int {return 2}).
+	Done()
+
+	if !passed.IsErrAnd(func(err error) bool {return err.Error() == "comparable value does not match any test cases"}) {
 		t.Fail()
 	} 
 }

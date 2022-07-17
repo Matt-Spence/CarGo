@@ -11,9 +11,9 @@ func (r Result[T]) Unwrap() T {
 
 func (r Result[T]) UnwrapOr(val T) T {
 	if r.Err == nil {
-		return val
+		return r.Value
 	}
-	return r.Value
+	return val
 }
 
 func (r Result[T]) IsOk() bool {

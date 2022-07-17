@@ -5,11 +5,11 @@ import "errors"
 type Match[T comparable, U any] struct {
 	Value T
 	result U
-	match string `default:"false"`
+	match string
 }
 
 func (m Match[T, U]) Case(test T, statement func() U) Match[T, U]{
-    if(m.Value == test && m.match == "false") {
+    if(m.Value == test && m.match == "") {
 		m.result = statement()
 		m.match = "true"
 	}
@@ -18,7 +18,7 @@ func (m Match[T, U]) Case(test T, statement func() U) Match[T, U]{
 }
 
 func (m Match[T, U]) Done() Result[U] {
-	if(m.match == "false") {
+	if(m.match == "") {
 		return Result[U]{Err: errors.New("comparable value does not match any test cases")}
 	}
 	return Result[U]{Value: m.result}
