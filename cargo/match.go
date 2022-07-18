@@ -21,5 +21,5 @@ func (m Match[T, U]) Done() Result[U] {
 	if(m.match == "") {
 		return Result[U]{Err: errors.New("comparable value does not match any test cases")}
 	}
-	return Result[U]{Value: m.result}
+	return Result[U]{Ok: m.result}
 }
