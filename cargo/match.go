@@ -1,25 +1,23 @@
 package cargo
 
-import "errors"
-
 type Match[T comparable, U any] struct {
 	Value T
 	result U
-	match string
+	match bool
 }
 
 func (m Match[T, U]) Case(test T, statement func() U) Match[T, U]{
-    if(m.Value == test && m.match == "") {
+    if(m.Value == test && !m.match) {
 		m.result = statement()
-		m.match = "true"
+		m.match = true
 	}
 
 	return m
 }
 
 func (m Match[T, U]) Done() Result[U] {
-	if(m.match == "") {
-		return Result[U]{Err: errors.New("comparable value does not match any test cases")}
+	if(!m.match) {
+		return Err[U]{}
 	}
-	return Result[U]{Ok: m.result}
+	return Ok[U]{m.result}
 }

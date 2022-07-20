@@ -1,56 +1,90 @@
 package cargo__test
 
 import (
-	"errors"
 	"testing"
 	. "github.com/Matt-Spence/CarGo/cargo"
 )
 
 func TestUnwrap(t *testing.T) {
-	var sr Result[float64] = Result[float64]{Ok: 6.0, Err: nil}
+	var sr Ok[float64] = Ok[float64]{6.0}
 	if sr.Unwrap() != 6.0 {
 		t.Fail()
 	}
 }
 
-func TestUnwrapOr(t *testing.T) {
-	var sr Result[float64] = Result[float64]{Ok: 6.0, Err: errors.New("error")}
+func TestOkUnwrapOr(t *testing.T) {
+	var sr Ok[float64] = Ok[float64]{6.0}
+	if sr.UnwrapOr(1.0) != 6.0 {
+		t.Fail()
+	}
+}
+
+func TestErrUnwrapOr(t *testing.T) {
+	var sr Err[float64] = Err[float64]{0.0}
 	if sr.UnwrapOr(1.0) != 1.0 {
 		t.Fail()
 	}
 }
 
-func TestIsOkAnd(t *testing.T) {
-	var sr Result[float64] = Result[float64]{Ok: 6.0, Err: nil}
+func TestOkIsOkAnd(t *testing.T) {
+	var sr Ok[float64] = Ok[float64]{6.0}
 	if !sr.IsOkAnd(func(f float64) bool { return f > 5.0 }) {
 		t.Fail()
 	}
 }
 
-func TestIsOk(t *testing.T) {
-	var sr Result[float64] = Result[float64]{Ok: 6.0, Err: nil}
+func TestErrIsOkAnd(t *testing.T) {
+	var sr Result[float64] = Err[float64]{6.0}
+	if sr.IsOkAnd(func(f float64) bool { return f > 5.0 }) {
+		t.Fail()
+	}
+}
+
+func TestOkIsOk(t *testing.T) {
+	var sr Result[float64] = Ok[float64]{6.0}
 	if !sr.IsOk() {
 		t.Fail()
 	}
 }
 
-func TestIsErrAnd(t *testing.T) {
-	var sr Result[float64] = Result[float64]{Ok: 6.0, Err: errors.New("error")}
-	if !sr.IsErrAnd(func(e error) bool { return e.Error() == "error" }) {
+func TestErrIsOk(t *testing.T) {
+	var sr Result[float64] = Err[float64]{6.0}
+	if sr.IsOk() {
 		t.Fail()
 	}
 }
 
-func TestIsErr(t *testing.T) {
-	var sr Result[float64] = Result[float64]{Ok: 6.0, Err: errors.New("error")}
+func TestOkIsErrAnd(t *testing.T) {
+	var sr Result[float64] = Ok[float64]{6.0}
+	if sr.IsErrAnd(func() bool { return true }) {
+		t.Fail()
+	}
+}
+
+func TestErrIsErrAnd(t *testing.T) {
+	var sr Result[float64] = Err[float64]{6.0}
+	if !sr.IsErrAnd(func() bool { return true }) {
+		t.Fail()
+	}
+}
+
+func TestErrIsErr(t *testing.T) {
+	var sr Result[float64] = Err[float64]{6.0}
 	if !sr.IsErr() {
 		t.Fail()
 	}
 }
 
-func TestThen(t *testing.T) {
-	var sr Result[float64] = Result[float64]{Ok: 6.0, Err: errors.New("error")}
-	if sr.Then(func(r Result[float64]) any {return r.Ok + 1.0}) != 7.0 {
+func TestOkThen(t *testing.T) {
+	var sr Result[float64] = Ok[float64]{6.0}
+	if sr.Then(func(f float64) any {return f + 1.0}) != 7.0 {
+		t.Fail()
+	}
+}
+
+func TestErrThen(t *testing.T) {
+	var sr Result[float64] = Err[float64]{6.0}
+	if sr.Then(func(f float64) any {return f + 1.0}) != 7.0 {
 		t.Fail()
 	}
 }

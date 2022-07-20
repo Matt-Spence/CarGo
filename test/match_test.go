@@ -34,7 +34,7 @@ func TestMatchUnmatched(t *testing.T) {
 		Case("notThisOneEither", func() int {return 2}).
 	Done()
 
-	if !passed.IsErrAnd(func(err error) bool {return err.Error() == "comparable value does not match any test cases"}) {
+	if !passed.IsErrAnd(func() bool {return true}) {
 		t.Fail()
 	} 
 }
