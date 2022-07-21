@@ -13,7 +13,7 @@ func TestSomeIsSome(t *testing.T) {
 }
 
 func TestNoneIsSome(t *testing.T) {
-	var op Option[any] = None()
+	var op Option[bool] = None[bool]()
 	if op.IsSome() {
 		t.Fail()
 	}
@@ -27,7 +27,7 @@ func TestSomeIsNone(t *testing.T) {
 }
 
 func TestNoneIsNone(t *testing.T) {
-	var op Option[any] = None()
+	var op Option[bool] = None[bool]()
 	if !op.IsNone() {
 		t.Fail()
 	}
@@ -39,7 +39,7 @@ func TestNoneExpect(t *testing.T) {
 			t.Fail()
 		}
 	}()
-	None().Expect("test")
+	None[bool]().Expect("test")
 }
 
 func TestSomeExpect(t *testing.T) {
